@@ -16,9 +16,9 @@ nltk.download('averaged_perceptron_tagger')
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 from googletrans import Translator
+import flask
 
-
-data = open('./Datasource.txt','r',errors = 'ignore')
+data = open('./HR.txt','r',errors = 'ignore')
 raw = data.read()
 raw = raw.lower()
 
@@ -101,14 +101,14 @@ def wikipedia_data(input):
     except Exception as e:
             print("No content has been found")
 
-def diag_response(data,symptom,addif,input):
-    user_response = input
+def diag_response(data,symptom,addif):
+    user_response = input()
     user_response=user_response.lower()
     if user_response == addif:
         data=data+symptom+','
     elif user_response not in ['yes','no']:
         print("Chatterbot : Please type yes or no")
-        diag_response(data,symptom,addif,input)
+        diag_response(data,symptom,addif)
     return data
 
 def start():
@@ -127,7 +127,7 @@ def start():
         data=data[:-1]
     return data
 
-def change_lang_init():
+def change_lang():
     global _destlang
     string_var="""Type the number that mathes the language you want to select:
     1 - English
@@ -140,10 +140,8 @@ def change_lang_init():
     8 - Chinese
     9 - Japanese
     """
-    return(tr(string_var))
-
-def change_lang(input):
-    user_response = input
+    print(tr(string_var))
+    user_response = input()
     user_response=user_response.lower()
     if user_response == '1':
         _destlang='en'
@@ -165,26 +163,24 @@ def change_lang(input):
         _destlang='ja'
     else:
         string_var="Incorrect input. Please, select an existing option"
-        return(tr(string_var))
-    string_var="Language changed"
-    return(tr(string_var))
+        print(tr(string_var))
+        change_lang()
 
 ### MAIN
 
-def init():
-    initstr="""My name is Mirabot and I'm a chatbot. The available options are:
+flag=True
+initstr="""My name is Sickbot and I'm a chatbot. The available options are:
           - To begin the diagnostic, type start
           - To change the language, type lang
           - To ask a question, type 'tell me about' followed by the question
           - To exit, type bye"""
-    return initstr
-
-def execute(input):
-
-    user_response = input
+print(initstr)
+while(flag==True):
+    user_response = input()
     user_response=user_response.lower()
     if(user_response not in ['bye','shutdown','exit', 'quit']):
         if(user_response=='thanks' or user_response=='thank you' ):
+            flag=False
             string_var="Chatterbot : You are welcome.."
             print(tr(string_var))
         elif user_response=='start':
@@ -199,7 +195,7 @@ def execute(input):
                 string_var="Chatterbot : Not enough data"
                 print(tr(string_var))
         elif user_response=='lang':
-            change_lang_init()
+            change_lang()
             string_var="Language changed"
             print(tr(string_var))
             print("\n")
@@ -219,4 +215,5 @@ def execute(input):
                     print(tr("Nothing found"))
                 sent_tokens.remove(user_response)
     else:
+        flag=False
         print("Chatterbot : Bye!!! ")
