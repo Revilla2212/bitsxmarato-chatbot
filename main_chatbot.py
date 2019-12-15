@@ -16,9 +16,8 @@ nltk.download('averaged_perceptron_tagger')
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 from googletrans import Translator
-import flask
 
-data = open('./HR.txt','r',errors = 'ignore')
+data = open('./Datasource.txt','r',errors = 'ignore')
 raw = data.read()
 raw = raw.lower()
 
@@ -169,7 +168,7 @@ def change_lang():
 ### MAIN
 
 flag=True
-initstr="""My name is Sickbot and I'm a chatbot. The available options are:
+initstr="""My name is Mirabot and I'm a chatbot. The available options are:
           - To begin the diagnostic, type start
           - To change the language, type lang
           - To ask a question, type 'tell me about' followed by the question
